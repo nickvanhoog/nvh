@@ -6,6 +6,7 @@ class heap:
 	numElements = 0; # The number of entries in the heap
 
 	##### Externally facing methods #####
+	
 	def __init__(self, initData = []):
 		data = []
 		numElements = 0
@@ -15,12 +16,12 @@ class heap:
 		""" Sorts the list of integers in dataToSort and returns the sorted list """
 		self.clear()
 		self.constructFromData(dataToSort)
-		dataToSort = []
-		while self.numElements > 0:
-			temp = self.extractMin()
-			dataToSort.append(temp)
+		sortedData = []
 
-		return dataToSort
+		while self.numElements > 0:
+			sortedData.append(self.extractMin())
+
+		return sortedData
 
 	def wellFormed(self):
 		""" Returns True if the min-heap's structure is sound, and False otherwise """
@@ -43,18 +44,18 @@ class heap:
 
 		temp = self.data[0]
 		if self.numElements == 1:
-			self.numElements = 0
-			self.data = []
+			self.clear()
 			return temp
 
+		# Put the last rightmost element on bottom level at root
 		self.data[0] = self.data[self.numElements - 1]
 		self.data.pop(self.numElements - 1)
 		self.numElements -= 1
 		index = 0
 
-		# Now let the new root bubble down as necessary
-		while self.hasLeftChild(index) and self.greaterThanChildren(index):
-			# Find smallest child
+		# Let the new root bubble down as necessary
+		while not self.isLeaf(index) and self.greaterThanChildren(index):
+			# Find smallest child and swap places
 			minChildIndex = self.getMinChildIndex(index)
 			self.swap(index, minChildIndex)
 			index = minChildIndex
@@ -68,27 +69,26 @@ class heap:
 		index = self.numElements
 		self.numElements += 1
 
-		while self.smallerThanParent(index) and index > 0:
+		# Bubble new node up until it's larger than its parent
+		while index > 0 and self.smallerThanParent(index):
 			self.swap(index, self.parentIndexOf(index))
 			index = self.parentIndexOf(index)
 
 	def constructFromData(self, givenData):
 		""" Constructs a min-heap from givenData """
-		self.numElements = 0
-		self.data = []
+		self.clear()
 		for i in givenData:
 			self.insert(i)
 	
 
 	def generate(self, num):
 		""" Fills the heap with num random integers """
-		self.data = []
-		self.numElements = 0
+		self.clear()
 		for i in range(0, num):
 			self.insert(randint(1, 100))
 
 	def output(self):
-		""" Outputs the heap """
+		""" Outputs the heap in a fairly unreadable fashion """
 		for i in range(0, self.numElements):
 			print 'Children of: ' + str(self.data[i]) + ': ',
 			if self.leftChildIndexOf(i) < self.numElements:
@@ -103,6 +103,7 @@ class heap:
 	def getMinChildIndex(self, index):
 		""" Returns the index of the smallest child of data[index] """
 		leftChild = self.data[self.leftChildIndexOf(index)]
+		
 		if self.rightChildIndexOf(index) < self.numElements:
 			rightChild = self.data[self.rightChildIndexOf(index)]
 			if rightChild < leftChild:
@@ -144,9 +145,9 @@ class heap:
 	def rightChildIndexOf(self, n):
 		return 2*n + 2
 
-	def hasLeftChild(self, index):
+	def isLeaf(self, index):
 		""" Returns true if the node at index has a left child, and false otherwise """
-		if self.leftChildIndexOf(index) < self.numElements:
+		if self.leftChildIndexOf(index) >= self.numElements:
 			return True
 		else:
 			return False
