@@ -55,5 +55,7 @@ if __name__ == '__main__':
 	g = graph()
 	g.addVertex([(1, 1), (4, 1)])
 	g.addVertex([(0, 1), (2, 1), (4, 1)])
+	g.addVertex([(1, 1), (3, 1)])
+	g.addVertex([])
 	g.output()	
 
