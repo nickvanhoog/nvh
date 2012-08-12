@@ -7,15 +7,12 @@ if __name__ == '__main__':
 	runningProduct = long(1)
 
 	for i in range(0, numItems):
-		try:
-			currentNum = long(raw_input())
-			if currentNum != 0:
-				runningProduct *= currentNum
-			else:
-				numZeros += 1
-			data.append(currentNum)
-		except (EOFError):
-			break
+		currentNum = long(raw_input())
+		if currentNum != 0:
+			runningProduct *= currentNum
+		else:
+			numZeros += 1
+		data.append(currentNum)
 
 	for i in range(0, numItems):
 		if numZeros > 1 or (numZeros == 1 and data[i] != 0):
